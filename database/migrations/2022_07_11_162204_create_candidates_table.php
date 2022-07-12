@@ -17,14 +17,14 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->integer('phone');
+            $table->integer('phone_number');
             $table->integer('experience');
             $table->string('education');
             $table->date('birth_date');
             $table->string('last_position');
             $table->string('applied_position');
             $table->string('skill');
-            $table->string('resume');
+            $table->string('resume')->nullable();
             $table->timestamps();
         });
     }

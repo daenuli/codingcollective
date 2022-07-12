@@ -46,7 +46,7 @@
         <form action="{{url('auth')}}" method="post">
         @csrf
             <div class="form-group has-feedback">
-                <input type="email" class="form-control" name="email" value="admin@example.com" placeholder="Email">
+                <input type="email" class="form-control" name="email" value="senior@example.com" placeholder="Email">
                 <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback">

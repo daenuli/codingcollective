@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CandidateController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,5 +17,17 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
+})->name('login');
+
+Route::post('/auth', [AuthController::class, 'auth']);
+
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('candidates/data', [CandidateController::class, 'data'])->name('candidates.data');
+    Route::resource('candidates', CandidateController::class);
+    
+    Route::get('users/data', [UserController::class, 'data'])->name('users.data');
+    Route::resource('users', UserController::class);
+
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });

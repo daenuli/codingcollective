@@ -3,18 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Candidate;
+use App\Models\User;
 use Carbon\Carbon;
 use DataTables;
 use Form;
 
-class CandidateController extends Controller
+class UserController extends Controller
 {
-    public $title = 'Candidate';
-    public $uri = 'candidates';
-    public $folder = 'candidate';
+    public $title = 'User';
+    public $uri = 'users';
+    public $folder = 'user';
 
-    public function __construct(Candidate $table)
+    public function __construct(User $table)
     {
         $this->table = $table;
     }
@@ -32,15 +32,15 @@ class CandidateController extends Controller
     {
         if (!$request->ajax()) { return; }
         $data = $this->table->select([
-            'id', 'name', 'email', 'birth_date',
-            'applied_position', 'education', 'resume', 'created_at'
+            'id', 'name', 'email', 'role', 'created_at'
         ]);
         return DataTables::of($data)
-        ->addColumn('age', function ($index) {
-            return Carbon::parse($index->birth_date)->age;
-        })
-        ->editColumn('resume', function ($index) {
-            return ($index->resume) ? "<a href='javascript:void(0)' data-resume='$index->resume' class='btn btn-warning btn-xs view-resume'>View Resume</a>" : '-';
+        ->editColumn('role', function ($index) {
+            if($index->role == 'senior_hrd') {
+                return '<span class="label label-success">Senior HRD</span>';
+            } else {
+                return '<span class="label label-info">Staff HRD</span>';
+            }
         })
         ->editColumn('created_at', function ($index) {
             return isset($index->created_at) ? $index->created_at->format('d F Y H:i:s') : '-';
@@ -48,12 +48,11 @@ class CandidateController extends Controller
         ->addColumn('action', function ($index) {
             $tag = Form::open(array("url" => route($this->uri.'.destroy',$index->id), "method" => "DELETE"));
             $tag .= "<a href=".route($this->uri.'.edit',$index->id)." class='btn btn-primary btn-xs'>edit</a>";
-            $tag .= "<a href=".route($this->uri.'.show',$index->id)." class='btn btn-success btn-xs'>detail</a>";
             $tag .= " <button type='submit' class='delete btn btn-danger btn-xs'>delete</button>";
             $tag .= Form::close();
             return $tag;
         })
-        ->rawColumns(['id', 'resume', 'action'])
+        ->rawColumns(['id', 'role', 'action'])
         ->make(true);
     }
 
@@ -71,15 +70,13 @@ class CandidateController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
-            'phone_number' => 'required',
-            'experience' => 'required',
-            'education' => 'required',
-            'birth_date' => 'required',
-            'last_position' => 'required',
-            'applied_position' => 'required',
-            'skill' => 'required',
-            'resume' => 'required|file'
+            'password' => 'required|min:8',
         ]);
+
+        $request->merge([
+            'password' => bcrypt($request->password)
+        ]);
+
         $this->table->create($request->all());
         return redirect(route($this->uri.'.index'))->with('success', trans('message.create'));
     }
@@ -88,7 +85,7 @@ class CandidateController extends Controller
     {
         $data['title'] = $this->title;
         $data['desc'] = 'Edit';
-        $data['candidate'] = $this->table->find($id);
+        $data['user'] = $this->table->find($id);
         $data['action'] = route($this->uri.'.update', $id);
         $data['url'] = route($this->uri.'.index');
         return view($this->folder.'.edit', $data);
@@ -97,16 +94,17 @@ class CandidateController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required',
             'email' => 'required|unique:users,email,'.$id,
-            'phone_number' => 'required',
-            'experience' => 'required',
-            'education' => 'required',
-            'birth_date' => 'required',
-            'last_position' => 'required',
-            'applied_position' => 'required',
-            'skill' => 'required'
+            'password' => 'nullable|min:6'
         ]);
+        
+        if(empty($request->password)){
+            unset($request['password']);
+        } else {
+            $request->merge([
+                'password' => bcrypt($request->password)
+            ]);
+        }
 
         $this->table->find($id)->update($request->all());
 
