@@ -1,6 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
+@if (session()->has('success'))
+    <div class="callout callout-success">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <p>{!!session('success')!!}</p>
+    </div>
+@endif
 <div class="box">
 	<div class="box-header with-border">
         <a href="{{$url}}" class="btn btn-warning"><i class="fa fa-fw fa-arrow-left"></i> Back</a>
@@ -37,7 +43,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-2 control-label">Experience (Year)</label>
+                <label class="col-sm-2 control-label">Experience</label>
                 <div class="col-sm-8">
                     <input type="number" class="form-control" name="experience" value="{{$candidate->experience}}" placeholder="Ex: 5" autocomplete="off">
                     @error('experience')

@@ -33,7 +33,7 @@ class CandidateController extends Controller
         if (!$request->ajax()) { return; }
         $data = $this->table->select([
             'id', 'name', 'email', 'birth_date',
-            'applied_position', 'education', 'resume', 'created_at'
+            'applied_position', 'resume', 'created_at'
         ]);
         return DataTables::of($data)
         ->addColumn('age', function ($index) {
@@ -43,13 +43,13 @@ class CandidateController extends Controller
             return ($index->resume) ? "<a href='javascript:void(0)' data-resume='$index->resume' class='btn btn-warning btn-xs view-resume'>View Resume</a>" : '-';
         })
         ->editColumn('created_at', function ($index) {
-            return isset($index->created_at) ? $index->created_at->format('d F Y H:i:s') : '-';
+            return isset($index->created_at) ? $index->created_at->format('d F Y') : '-';
         })
         ->addColumn('action', function ($index) {
             $tag = Form::open(array("url" => route($this->uri.'.destroy',$index->id), "method" => "DELETE"));
-            $tag .= "<a href=".route($this->uri.'.edit',$index->id)." class='btn btn-primary btn-xs'>edit</a>";
-            $tag .= "<a href=".route($this->uri.'.show',$index->id)." class='btn btn-success btn-xs'>detail</a>";
-            $tag .= " <button type='submit' class='delete btn btn-danger btn-xs'>delete</button>";
+            $tag .= "<div class='btn-group'><a href=".route($this->uri.'.edit',$index->id)." class='btn btn-primary btn-xs'><i class='fa fa-edit'></i></a></a>";
+            $tag .= "<a href=".route($this->uri.'.show',$index->id)." class='btn btn-success btn-xs'><i class='fa fa-eye'></i></a>";
+            $tag .= " <button type='submit' class='delete btn btn-danger btn-xs'><i class='fa fa-trash-o'></i></button></div>";
             $tag .= Form::close();
             return $tag;
         })
@@ -78,10 +78,10 @@ class CandidateController extends Controller
             'last_position' => 'required',
             'applied_position' => 'required',
             'skill' => 'required',
-            'resume' => 'required|file'
+            'resume' => 'file'
         ]);
         $this->table->create($request->all());
-        return redirect(route($this->uri.'.index'))->with('success', trans('message.create'));
+        return redirect(route($this->uri.'.index'))->with('success', 'Candidate has been created');
     }
 
     public function edit($id)
@@ -110,13 +110,22 @@ class CandidateController extends Controller
 
         $this->table->find($id)->update($request->all());
 
-        return redirect(route($this->uri.'.index'))->with('success', trans('message.update'));
+        return redirect()->back()->with('success', 'Candidate has been updated');
+    }
+
+    public function show($id)
+    {
+        $data['title'] = $this->title;
+        $data['desc'] = 'Detail';
+        $data['candidate'] = $this->table->find($id);
+        $data['url'] = route($this->uri.'.index');
+        return view($this->folder.'.show', $data);
     }
 
     public function destroy($id)
     {
         $tb = $this->table->find($id);
         $tb->delete();
-        return response()->json(['message' => true,'success' => trans('message.delete')]);
+        return redirect(route($this->uri.'.index'))->with('success', 'Candidate has been deleted');
     }
 }

@@ -78,7 +78,7 @@ class UserController extends Controller
         ]);
 
         $this->table->create($request->all());
-        return redirect(route($this->uri.'.index'))->with('success', trans('message.create'));
+        return redirect(route($this->uri.'.index'))->with('success', 'User has been created');
     }
 
     public function edit($id)
@@ -108,13 +108,13 @@ class UserController extends Controller
 
         $this->table->find($id)->update($request->all());
 
-        return redirect(route($this->uri.'.index'))->with('success', trans('message.update'));
+        return redirect(route($this->uri.'.index'))->with('success', 'User has been updated');
     }
 
     public function destroy($id)
     {
         $tb = $this->table->find($id);
         $tb->delete();
-        return response()->json(['message' => true,'success' => trans('message.delete')]);
+        return redirect(route($this->uri.'.index'))->with('success', 'User has been deleted');
     }
 }

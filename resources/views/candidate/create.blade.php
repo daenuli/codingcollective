@@ -1,6 +1,29 @@
 @extends('layouts.app')
 
+@push('select2')
+    <link rel="stylesheet" href="{{asset('AdminLTE-2.4.15/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css')}}">
+@endpush
+
+@push('scripts')
+    <script src="{{asset('AdminLTE-2.4.15/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')}}"></script>
+    <script>
+    $('.datepicker').datepicker({
+        format:'yyyy-mm-dd',
+        autoclose: true
+    });
+  </script>
+@endpush
+
 @section('content')
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 <div class="box">
 	<div class="box-header with-border">
         <a href="{{$url}}" class="btn btn-warning"><i class="fa fa-fw fa-arrow-left"></i> Back</a>
@@ -11,7 +34,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">Name</label>
                 <div class="col-sm-8">
-                    <input type="text" class="form-control" name="name" value="{{old('name')}}" autocomplete="off">
+                    <input type="text" class="form-control" name="name" value="{{old('name')}}" placeholder="Ex: Amber Heard" autocomplete="off">
                     @error('name')
                         <p class="text-red">{{ $message }}</p>
                     @enderror

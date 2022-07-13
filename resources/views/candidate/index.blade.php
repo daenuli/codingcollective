@@ -8,19 +8,19 @@
     <script src="{{asset('AdminLTE-2.4.15/bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
 	<script src="{{asset('AdminLTE-2.4.15/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
     <script>
+    var table;
     $(function() {
-        $('#dataTable').DataTable({
+        table = $('#dataTable').DataTable({
             processing: true,
             serverSide: true,
             ajax: '{{$ajax}}',
-            order: [[7,'desc']],
+            order: [[6,'desc']],
             columns: [
                 { data: 'id', searchable: false, orderable: false},
                 { data: 'name', searchable: true, orderable: false},
                 { data: 'email', searchable: true, orderable: false},
                 { data: 'age', searchable: true, orderable: false},
                 { data: 'applied_position', searchable: true, orderable: false},
-                { data: 'education', searchable: true, orderable: false},
                 { data: 'resume', searchable: false, orderable: false},
                 { data: 'created_at', searchable: true, orderable: true},
                 { data: 'action', searchable: false, orderable: false}
@@ -36,7 +36,7 @@
     });
     $(document).on('click', '.delete', function () {
 		if (!confirm("Do you want to delete")){
-	      return false;
+	        return false;
 	    }
 	});
     </script>
@@ -64,7 +64,6 @@
 					<th>Email</th>
 					<th>Age</th>
 					<th>Applied Position</th>
-					<th>Education</th>
 					<th>Resume</th>
 					<th>Created At</th>
 					<th>Action</th>

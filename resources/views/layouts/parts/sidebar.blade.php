@@ -23,14 +23,14 @@
   <!-- sidebar menu: : style can be found in sidebar.less -->
   <ul class="sidebar-menu" data-widget="tree">
     <li class="header">MAIN NAVIGATION</li>
-    <li class="{{($urlactive == 'candidate') ? 'active' : ''}}">
-      <a href="{{url('candidate')}}">
+    <li class="{{($urlactive == 'candidates') ? 'active' : ''}}">
+      <a href="{{url('candidates')}}">
         <i class="fa fa-users"></i> <span>Candidate</span>
       </a>
     </li>
     @if(auth()->user()->role == 'senior_hrd')
-    <li class="{{($urlactive == 'user') ? 'active' : ''}}">
-      <a href="{{url('user')}}">
+    <li class="{{($urlactive == 'users') ? 'active' : ''}}">
+      <a href="{{url('users')}}">
         <i class="fa fa-user-secret"></i> <span>HRD</span>
       </a>
     </li>

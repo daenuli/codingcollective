@@ -32,13 +32,15 @@ class CandidateSeeder extends Seeder
         ];
 
         for ($i=0; $i < 20; $i++) { 
+            $first = $faker->firstName();
+            $last = $faker->lastName();
             $data[] = [
-                'name' => $faker->name(),
-                'email' => $faker->email(),
-                'phone_number' => str_replace("-","",$faker->phoneNumber()),
+                'name' => $first. ' '.$last,
+                'email' => strtolower($first.'.'.$last).'@'.$faker->freeEmailDomain(),
+                'phone_number' => $faker->e164PhoneNumber(),
                 'experience' => rand(1, 9),
                 'education' => $faker->randomElement($university),
-                'birth_date' => $faker->dateTimeBetween($startDate = '-15 years', $endDate = '-10 years', $timezone = null)->format('Y-m-d'),
+                'birth_date' => $faker->dateTimeBetween($startDate = '-35 years', $endDate = '-20 years', $timezone = null)->format('Y-m-d'),
                 'last_position' => $faker->randomElement($job),
                 'applied_position' => $faker->randomElement($job),
                 'skill' => $faker->randomElement($skill),
@@ -49,6 +51,5 @@ class CandidateSeeder extends Seeder
         }
         Candidate::insert($data);
 
-        Candidate::insert($data);
     }
 }

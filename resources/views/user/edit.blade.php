@@ -6,12 +6,13 @@
         <a href="{{$url}}" class="btn btn-warning"><i class="fa fa-fw fa-arrow-left"></i> Back</a>
 	</div>
     <form action="{{$action}}" method="POST" class="form-horizontal">
+    <input type="hidden" name="_method" value="PUT">
     @csrf
         <div class="box-body">
             <div class="form-group">
                 <label class="col-sm-2 control-label">Name</label>
                 <div class="col-sm-8">
-                    <input type="text" class="form-control" name="name" value="{{old('name')}}" autocomplete="off">
+                    <input type="text" class="form-control" name="name" value="{{$user->name}}" autocomplete="off">
                     @error('name')
                         <p class="text-red">{{ $message }}</p>
                     @enderror
@@ -20,7 +21,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">Email</label>
                 <div class="col-sm-8">
-                    <input type="email" class="form-control" name="email" value="{{old('email')}}" placeholder="Ex: smith@gmail.com" autocomplete="off">
+                    <input type="email" class="form-control" name="email" value="{{$user->email}}" autocomplete="off">
                     @error('email')
                         <p class="text-red">{{ $message }}</p>
                     @enderror
@@ -31,13 +32,13 @@
                 <div class="col-sm-8">
                     <div class="radio">
                         <label>
-                            <input type="radio" name="role" id="optionsRadios1" value="senior_hrd" {{(old('role') == 'senior_hrd') ? 'selected' : ''}}>
+                            <input type="radio" name="role" id="optionsRadios1" value="senior_hrd" {{($user->role == 'senior_hrd') ? 'selected': ''}}>
                             Senior HRD
                         </label>
                     </div>
                     <div class="radio">
                         <label>
-                            <input type="radio" name="role" id="optionsRadios2" value="hrd" {{(old('role') == 'hrd') ? 'selected' : ''}}>
+                            <input type="radio" name="role" id="optionsRadios2" value="hrd" {{($user->role == 'hrd') ? 'selected': ''}}>
                             HRD
                         </label>
                     </div>

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\UserController;
 
@@ -23,6 +24,8 @@ Route::get('/', function () {
 Route::post('/auth', [AuthController::class, 'auth']);
 
 Route::group(['middleware' => ['auth']], function () {
+    Route::get('home', [HomeController::class, 'index'])->name('home.index');
+    
     Route::get('candidates/data', [CandidateController::class, 'data'])->name('candidates.data');
     Route::resource('candidates', CandidateController::class);
     
