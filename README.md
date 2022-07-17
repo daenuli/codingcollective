@@ -60,5 +60,9 @@ Run development server
 php artisan serve
 ```
 
+Access development server at http://127.0.0.1:8000
+
+Access API Documentation at http://127.0.0.1:8000/api/documentation
+
 <!-- Access development server at http://127.0.0.1:8000 -->
 <!-- Access API Documentation at http://127.0.0.1:8000/api/documentation -->
