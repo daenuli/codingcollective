@@ -11,7 +11,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">Name</label>
                 <div class="col-sm-8">
-                    <input type="text" class="form-control" name="name" value="{{old('name')}}" autocomplete="off">
+                    <input type="text" class="form-control" name="name" value="{{old('name')}}" placeholder="Ex: Amber Heard" autocomplete="off">
                     @error('name')
                         <p class="text-red">{{ $message }}</p>
                     @enderror
@@ -31,13 +31,13 @@
                 <div class="col-sm-8">
                     <div class="radio">
                         <label>
-                            <input type="radio" name="role" id="optionsRadios1" value="senior_hrd" {{(old('role') == 'senior_hrd') ? 'selected' : ''}}>
+                            <input type="radio" name="role" id="optionsRadios1" value="senior_hrd" {{(old('role') == 'senior_hrd') ? 'checked' : ''}}>
                             Senior HRD
                         </label>
                     </div>
                     <div class="radio">
                         <label>
-                            <input type="radio" name="role" id="optionsRadios2" value="hrd" {{(old('role') == 'hrd') ? 'selected' : ''}}>
+                            <input type="radio" name="role" id="optionsRadios2" value="hrd" {{(old('role') == 'hrd') ? 'checked' : ''}}>
                             HRD
                         </label>
                     </div>

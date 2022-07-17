@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Candidate;
 use Carbon\Carbon;
 use DataTables;
@@ -16,6 +17,7 @@ class CandidateController extends Controller
 
     public function __construct(Candidate $table)
     {
+        $this->middleware('permission', ['except' => ['index', 'data', 'show']]);
         $this->table = $table;
     }
 
@@ -40,16 +42,18 @@ class CandidateController extends Controller
             return Carbon::parse($index->birth_date)->age;
         })
         ->editColumn('resume', function ($index) {
-            return ($index->resume) ? "<a href='javascript:void(0)' data-resume='$index->resume' class='btn btn-warning btn-xs view-resume'>View Resume</a>" : '-';
+            return ($index->resume) ? "<a href='/uploads/$index->resume' class='btn btn-warning btn-xs' target='_blank'><i class='fa fa-file-pdf-o'></i> View Resume</a>" : '-';
         })
         ->editColumn('created_at', function ($index) {
             return isset($index->created_at) ? $index->created_at->format('d F Y') : '-';
         })
         ->addColumn('action', function ($index) {
             $tag = Form::open(array("url" => route($this->uri.'.destroy',$index->id), "method" => "DELETE"));
-            $tag .= "<div class='btn-group'><a href=".route($this->uri.'.edit',$index->id)." class='btn btn-primary btn-xs'><i class='fa fa-edit'></i></a></a>";
+            $tag .= "<div class='btn-group'>";
+            $tag .= (auth()->user()->role == "senior_hrd") ? "<a href=".route($this->uri.'.edit',$index->id)." class='btn btn-primary btn-xs'><i class='fa fa-edit'></i></a>" : "";
             $tag .= "<a href=".route($this->uri.'.show',$index->id)." class='btn btn-success btn-xs'><i class='fa fa-eye'></i></a>";
-            $tag .= " <button type='submit' class='delete btn btn-danger btn-xs'><i class='fa fa-trash-o'></i></button></div>";
+            $tag .= (auth()->user()->role == "senior_hrd") ? " <button type='submit' class='delete btn btn-danger btn-xs'><i class='fa fa-trash-o'></i></button>" : "";
+            $tag .= "</div>";
             $tag .= Form::close();
             return $tag;
         })
@@ -78,8 +82,15 @@ class CandidateController extends Controller
             'last_position' => 'required',
             'applied_position' => 'required',
             'skill' => 'required',
-            'resume' => 'file'
+            'resume_file' => 'required|mimes:pdf'
         ]);
+
+        if($request->hasFile('resume_file')) {
+            $path = $request->file('resume_file')->storePublicly('candidates', 'public_upload');
+            $request->merge([
+                'resume' => (isset($path) && !empty($path)) ? $path : null
+            ]);
+        }
         $this->table->create($request->all());
         return redirect(route($this->uri.'.index'))->with('success', 'Candidate has been created');
     }
@@ -105,10 +116,21 @@ class CandidateController extends Controller
             'birth_date' => 'required',
             'last_position' => 'required',
             'applied_position' => 'required',
-            'skill' => 'required'
+            'skill' => 'required',
+            'resume_file' => 'nullable|mimes:pdf'
         ]);
 
-        $this->table->find($id)->update($request->all());
+        $candidate = $this->table->find($id);
+
+        if($request->hasFile('resume_file')) {
+            Storage::disk('public_upload')->delete($candidate->resume);
+            $path = $request->file('resume_file')->storePublicly('candidates', 'public_upload');
+            $request->merge([
+                'resume' => (isset($path) && !empty($path)) ? $path : null
+            ]);
+        }
+
+        $candidate->update($request->all());
 
         return redirect()->back()->with('success', 'Candidate has been updated');
     }
@@ -126,6 +148,7 @@ class CandidateController extends Controller
     {
         $tb = $this->table->find($id);
         $tb->delete();
+        Storage::disk('public_upload')->delete($tb->resume);
         return redirect(route($this->uri.'.index'))->with('success', 'Candidate has been deleted');
     }
 }

@@ -1,0 +1,524 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Coding Collective Api Documentation",
+        "description": "L5 Swagger OpenApi description",
+        "contact": {
+            "email": "giarsyani.nuli@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000/",
+            "description": "Demo API Server"
+        }
+    ],
+    "paths": {
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Sign in",
+                "operationId": "222b2625838e3c57e017987f73598fda",
+                "requestBody": {
+                    "description": "User auth",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "senior@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "111111"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login Successful"
+                    },
+                    "422": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "string",
+                                            "example": "Incorrect Details. Please try again"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Logout",
+                "description": "Logout user and invalidate token",
+                "operationId": "ad65cbbd4e9f201619eae184a5961a98",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/candidates": {
+            "get": {
+                "tags": [
+                    "Candidates"
+                ],
+                "summary": "Get list of candidates",
+                "description": "Returns list of candidates",
+                "operationId": "getCandidateList",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Candidates"
+                ],
+                "summary": "Store new candidate",
+                "description": "Returns candidate data",
+                "operationId": "storeCandidate",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "phone_number",
+                                    "experience",
+                                    "education",
+                                    "birth_date",
+                                    "last_position",
+                                    "applied_position",
+                                    "skill",
+                                    "resume_file"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "C Ronaldo"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "c.ronaldo@mail.com"
+                                    },
+                                    "birth_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2001-07-20"
+                                    },
+                                    "phone_number": {
+                                        "type": "integer",
+                                        "format": "int64",
+                                        "example": "62819157421"
+                                    },
+                                    "experience": {
+                                        "type": "integer",
+                                        "format": "int64",
+                                        "example": "5"
+                                    },
+                                    "education": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Universitas Gadjah Mada"
+                                    },
+                                    "last_position": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "CEO"
+                                    },
+                                    "applied_position": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Senior PHP Developer"
+                                    },
+                                    "skill": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Laravel, Mysql, PostgreSQL, Codeigniter, Java"
+                                    },
+                                    "resume_file": {
+                                        "description": "file to upload",
+                                        "type": "file"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/candidates/{id}": {
+            "get": {
+                "tags": [
+                    "Candidates"
+                ],
+                "summary": "Get candidate information",
+                "description": "Returns candidates data",
+                "operationId": "getCandidateById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Candidate id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "5"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Candidates"
+                ],
+                "summary": "Update existing candidate",
+                "description": "Returns updated candidate data",
+                "operationId": "updateCandidate",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Candidate id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "5"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "phone_number",
+                                    "experience",
+                                    "education",
+                                    "birth_date",
+                                    "last_position",
+                                    "applied_position",
+                                    "skill"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "C Ronaldo"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "c.ronaldo@mail.com"
+                                    },
+                                    "birth_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2001-07-20"
+                                    },
+                                    "phone_number": {
+                                        "type": "integer",
+                                        "format": "int64",
+                                        "example": "62819157421"
+                                    },
+                                    "experience": {
+                                        "type": "integer",
+                                        "format": "int64",
+                                        "example": "5"
+                                    },
+                                    "education": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Universitas Gadjah Mada"
+                                    },
+                                    "last_position": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "CEO"
+                                    },
+                                    "applied_position": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Senior PHP Developer"
+                                    },
+                                    "skill": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Laravel, Mysql, PostgreSQL, Codeigniter, Java"
+                                    },
+                                    "resume_file": {
+                                        "description": "file to upload",
+                                        "type": "file"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Candidates"
+                ],
+                "summary": "Delete existing candidate",
+                "description": "Deletes a record and returns no content",
+                "operationId": "deleteCandidate",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Candidate id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "5"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "CandidateResource": {
+                "description": "Class CandidateResource",
+                "properties": {
+                    "id": {
+                        "description": "ID",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "name": {
+                        "description": "name of the new candidate",
+                        "type": "integer",
+                        "format": "string",
+                        "example": "smith"
+                    },
+                    "email": {
+                        "description": "email of the new candidate",
+                        "type": "string",
+                        "format": "string",
+                        "example": "smith@gmail.com"
+                    },
+                    "birth_date": {
+                        "description": "birth date of the new candidate",
+                        "type": "string",
+                        "format": "date",
+                        "example": "1991-01-19"
+                    },
+                    "phone_number": {
+                        "description": "phone number of new candidate",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": "62819157421"
+                    },
+                    "experience": {
+                        "description": "experience of new candidate",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": "5"
+                    },
+                    "education": {
+                        "description": "education of new candidate",
+                        "type": "string",
+                        "format": "string",
+                        "example": "Universitas Gadjah Mada"
+                    },
+                    "last_position": {
+                        "description": "last position of new candidate",
+                        "type": "string",
+                        "format": "string",
+                        "example": "CEO"
+                    },
+                    "applied_position": {
+                        "description": "applied position of new candidate",
+                        "type": "string",
+                        "format": "string",
+                        "example": "Senior PHP Developer"
+                    },
+                    "skill": {
+                        "description": "skill of new candidate",
+                        "type": "string",
+                        "format": "string",
+                        "example": "Laravel, Mysql, PostgreSQL, Codeigniter, Java"
+                    },
+                    "resume_file": {
+                        "description": "resume file of new candidate",
+                        "type": "string",
+                        "format": "binary",
+                        "example": "https://media.neliti.com/media/publications/346316-retraction-notice-to-komparasi-algoritma-f20c03c4.pdf"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "passport": {
+                "type": "oauth2",
+                "description": "Laravel passport oauth2 security.",
+                "in": "header",
+                "scheme": "https",
+                "name": "Authorization",
+                "flows": {
+                    "password": {
+                        "authorizationUrl": "http://127.0.0.1:8000/oauth/authorize",
+                        "tokenUrl": "http://127.0.0.1:8000/oauth/token",
+                        "refreshUrl": "http://127.0.0.1:8000/token/refresh",
+                        "scopes": []
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "API Endpoints of Authentication"
+        },
+        {
+            "name": "Candidates",
+            "description": "API Endpoints of Candidates"
+        }
+    ]
+}

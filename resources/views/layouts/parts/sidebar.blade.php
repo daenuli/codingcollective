@@ -28,12 +28,10 @@
         <i class="fa fa-users"></i> <span>Candidate</span>
       </a>
     </li>
-    @if(auth()->user()->role == 'senior_hrd')
     <li class="{{($urlactive == 'users') ? 'active' : ''}}">
       <a href="{{url('users')}}">
         <i class="fa fa-user-secret"></i> <span>HRD</span>
       </a>
     </li>
-    @endif
   </ul>
 </section>

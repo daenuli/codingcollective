@@ -11,7 +11,7 @@
 	<div class="box-header with-border">
         <a href="{{$url}}" class="btn btn-warning"><i class="fa fa-fw fa-arrow-left"></i> Back</a>
 	</div>
-    <form action="{{$action}}" method="POST" class="form-horizontal">
+    <form action="{{$action}}" method="POST" class="form-horizontal" enctype="multipart/form-data">
     <input type="hidden" name="_method" value="PUT">
     @csrf
         <div class="box-body">
@@ -99,8 +99,8 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">Resume</label>
                 <div class="col-sm-8">
-                    <input type="file" class="form-control" name="file" autocomplete="off">
-                    @error('file')
+                    <input type="file" class="form-control" name="resume_file" autocomplete="off">
+                    @error('resume_file')
                         <p class="text-red">{{ $message }}</p>
                     @enderror
                 </div>

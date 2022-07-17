@@ -16,6 +16,7 @@ class UserController extends Controller
 
     public function __construct(User $table)
     {
+        $this->middleware('permission', ['except' => ['index', 'data']]);
         $this->table = $table;
     }
 
@@ -43,12 +44,14 @@ class UserController extends Controller
             }
         })
         ->editColumn('created_at', function ($index) {
-            return isset($index->created_at) ? $index->created_at->format('d F Y H:i:s') : '-';
+            return isset($index->created_at) ? $index->created_at->format('d F Y') : '-';
         })
         ->addColumn('action', function ($index) {
             $tag = Form::open(array("url" => route($this->uri.'.destroy',$index->id), "method" => "DELETE"));
-            $tag .= "<a href=".route($this->uri.'.edit',$index->id)." class='btn btn-primary btn-xs'>edit</a>";
-            $tag .= " <button type='submit' class='delete btn btn-danger btn-xs'>delete</button>";
+            $tag .= "<div class='btn-group'>";
+            $tag .= (auth()->user()->role == "senior_hrd") ? "<a href=".route($this->uri.'.edit',$index->id)." class='btn btn-primary btn-xs'><i class='fa fa-edit'></i></a>" : "";
+            $tag .= (auth()->user()->role == "senior_hrd") ? " <button type='submit' class='delete btn btn-danger btn-xs'><i class='fa fa-trash-o'></i></button>" : "";
+            $tag .= "</div>";
             $tag .= Form::close();
             return $tag;
         })
@@ -70,7 +73,8 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8',
+            'password' => 'required|min:6',
+            'role' => 'required'
         ]);
 
         $request->merge([
@@ -95,7 +99,8 @@ class UserController extends Controller
     {
         $request->validate([
             'email' => 'required|unique:users,email,'.$id,
-            'password' => 'nullable|min:6'
+            'password' => 'nullable|min:6',
+            'role' => 'required'
         ]);
         
         if(empty($request->password)){

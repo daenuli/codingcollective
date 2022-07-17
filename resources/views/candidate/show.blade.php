@@ -73,7 +73,9 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">Resume</label>
                 <div class="col-sm-8">
-                    <input type="file" class="form-control" name="file" autocomplete="off">
+                @if($candidate->resume)
+                    <a href="/uploads/{{$candidate->resume}}" class='btn btn-success' target='_blank'><i class="fa fa-file-pdf-o"></i> View Resume</a>
+                @endif
                 </div>
             </div>
         </div>

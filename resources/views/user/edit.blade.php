@@ -32,13 +32,13 @@
                 <div class="col-sm-8">
                     <div class="radio">
                         <label>
-                            <input type="radio" name="role" id="optionsRadios1" value="senior_hrd" {{($user->role == 'senior_hrd') ? 'selected': ''}}>
+                            <input type="radio" name="role" id="optionsRadios1" value="senior_hrd" {{($user->role == 'senior_hrd') ? 'checked': ''}}>
                             Senior HRD
                         </label>
                     </div>
                     <div class="radio">
                         <label>
-                            <input type="radio" name="role" id="optionsRadios2" value="hrd" {{($user->role == 'hrd') ? 'selected': ''}}>
+                            <input type="radio" name="role" id="optionsRadios2" value="hrd" {{($user->role == 'hrd') ? 'checked': ''}}>
                             HRD
                         </label>
                     </div>
@@ -54,6 +54,7 @@
                     @error('password')
                         <p class="text-red">{{ $message }}</p>
                     @enderror
+                    <p class="help-block">Kosongkan jika tidak diubah.</p>
                 </div>
             </div>
         </div>

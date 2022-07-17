@@ -51,10 +51,19 @@
 </div>
 @endif
 
+@if (session()->has('error'))
+<div class="callout callout-danger">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <p>{!!session('error')!!}</p>
+</div>
+@endif
+
 <div class="box">
 	<div class="box-header with-border">
+    @if(auth()->user()->role == 'senior_hrd')
         <a href="{{$create}}" class="btn btn-primary"><i class="fa fa-fw fa-plus"></i> Create</a>
-	</div>
+	@endif
+    </div>
 	<div class="box-body">
 	  	<table id="dataTable" class="table table-bordered table-hover">
             <thead>
