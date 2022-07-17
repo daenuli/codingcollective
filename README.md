@@ -51,7 +51,7 @@ php artisan db:seed
 Create a client for issuing access tokens
 
 ```bash
-php artisan passport:client
+php artisan passport:install
 ```
 
 Run development server
